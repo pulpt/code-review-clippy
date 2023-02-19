@@ -1,5 +1,6 @@
 import path = require('path');
 import { style } from './style';
+import { getReviewForCode } from './openAiClient';
 import * as vscode from 'vscode';
 
 const WORKSPACE = 'clippyReview';
@@ -10,15 +11,14 @@ const renderHtml = (msg: string, img: vscode.Uri) => `
     ${style}
   </style>
   <body>
-    <div class="message blurred">${msg}</div>
-    <div class="pointer blurred"></div>
+    <div class="message">${msg}</div>
     <img src="${img}" />
   </body>
 `;
 
 export function activate(context: vscode.ExtensionContext) {
   let clippy: vscode.WebviewPanel | undefined = undefined;
-  let disposable = vscode.commands.registerCommand('code-review-clippy.clippyReview', () => {
+  let disposable = vscode.commands.registerCommand('code-review-clippy.clippyReview', async () => {
     if (!clippy) {
       clippy = vscode.window.createWebviewPanel("clippy", "Clippy", {
         viewColumn: vscode.ViewColumn.Beside,
@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
       highlight = editor.document.getText(range);
     }
 
-    const content = validateAndCreateContent(editor, highlight);
+    const content = await validateAndCreateContent(editor, highlight);
     const img = clippy.webview.asWebviewUri(imageUrl);
     clippy.webview.html = renderHtml(content, img);
 
@@ -55,9 +55,9 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 }
 
-const validateAndCreateContent = (editor: vscode.TextEditor | undefined, highlight: string | undefined): string => {
-  const s = vscode.workspace.getConfiguration(WORKSPACE).get(API_KEY);
-  if (s === null) {
+const validateAndCreateContent = async (editor: vscode.TextEditor | undefined, highlight: string | undefined) => {
+  const apiKey = vscode.workspace.getConfiguration(WORKSPACE).get(API_KEY);
+  if (apiKey === null || !apiKey) {
     return toErrorMessage('No OpenAI API-key set!');
   }
   if (!editor) {
@@ -69,7 +69,9 @@ const validateAndCreateContent = (editor: vscode.TextEditor | undefined, highlig
   if (highlight.length > 1000) {
     return toErrorMessage('That\'s a long text, Clippy can\t read that much.');
   }
-  return highlight;
+  return getReviewForCode(highlight, String(apiKey))
+    .then((res) => res.data.choices[0].text)
+    .catch((e) => toErrorMessage(e.message));
 };
 
 const toErrorMessage = (errorMsg: string): string => {
