@@ -9,9 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:code-review-clippy.clippyReview"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
@@ -19,7 +16,18 @@
         "command": "code-review-clippy.clippyReview",
         "title": "Clippy hates you"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "clippyReview",
+      "properties": {
+        "clippyReview.openAiApiKey": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "OpenAI API-key"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
