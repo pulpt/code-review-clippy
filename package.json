@@ -6,7 +6,7 @@
   "repository": "https://github.com/pulpt/code-review-clippy",
   "homepage": "https://github.com/pulpt/code-review-clippy",
   "icon": "logo.png",
-  "publisher": "untero",
+  "publisher": "untero-hacks",
   "license": "MIT",
   "engines": {
     "vscode": "^1.75.0"
