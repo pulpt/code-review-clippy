@@ -1,18 +1,19 @@
 export const style = `
 body {
 	background: black;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 40em;
-    grid-gap: 6em;
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    right: 1em;
-    bottom: 1em;
+    width: 90%;
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
     justify-items: flex-end;
-    margin-left: 2em;
-    margin-right: 2em;
+    position: relative;
+    top: 2em;
+    left: 2em;
+    right: 2em;
+    bottom: 2em;
+    min-height: 40%;
 }
 
 .message {
@@ -21,7 +22,7 @@ body {
     background: #feffc6;
     width: 100%;
     max-width: fit-content;
-    min-width: 80vw;
+    min-width: 60vw;
     border-radius: 1em;
     color: black;
     padding: 2em;
@@ -40,4 +41,11 @@ body {
     border-top: solid 50px #feffc6;
     border-left: solid 50px transparent;
     border-right: solid 50px transparent;
+}
+
+.image {
+    max-height: 50%;
+    margin-top: 10em;
+    margin-left: auto;
+}
 `;
