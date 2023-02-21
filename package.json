@@ -14,12 +14,21 @@
     "commands": [
       {
         "command": "code-review-clippy.clippyReview",
-        "title": "Clippy hates you"
+        "title": "Clippy hates your code"
       }
     ],
+    "menus": {
+      "editor/context": [
+        {
+          "title": "Clippy",
+          "when": "editorHasSelection",
+          "command": "code-review-clippy.clippyReview"
+        }
+      ]
+    },
     "configuration": {
       "type": "object",
-      "title": "clippyReview",
+      "title": "Clippy hates your code",
       "properties": {
         "clippyReview.openAiApiKey": {
           "type": [
@@ -28,6 +37,22 @@
           ],
           "default": null,
           "description": "OpenAI API-key"
+        },
+        "clippyReview.openAiApiMaxTokens": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "default": 1024,
+          "description": "MaxTokens-value for code generation"
+        },
+        "clippyReview.openAiModel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": "text-davinci-003",
+          "description": "OpenAI-model"
         }
       }
     }

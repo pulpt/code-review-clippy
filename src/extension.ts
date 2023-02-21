@@ -5,14 +5,18 @@ import * as vscode from 'vscode';
 
 const WORKSPACE = 'clippyReview';
 const API_KEY = 'openAiApiKey';
+const MODEL = 'openAiModel';
+const MAX_TOKENS = 'maxTokens';
 
 const renderHtml = (msg: string, img: vscode.Uri) => `
   <style>
     ${style}
   </style>
   <body>
-    <div class="message">${msg}</div>
-    <img src="${img}" />
+    <div class="container">
+      <div class="message">${msg}</div>
+      <img class="image" src="${img}" />
+    </div>
   </body>
 `;
 
@@ -20,7 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
   let clippy: vscode.WebviewPanel | undefined = undefined;
   let disposable = vscode.commands.registerCommand('code-review-clippy.clippyReview', async () => {
     if (!clippy) {
-      clippy = vscode.window.createWebviewPanel("clippy", "Clippy", {
+      clippy = vscode.window.createWebviewPanel("clippy", "Clippy hates your code", {
         viewColumn: vscode.ViewColumn.Beside,
         preserveFocus: true
       });
@@ -56,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 const validateAndCreateContent = async (editor: vscode.TextEditor | undefined, highlight: string | undefined) => {
-  const apiKey = vscode.workspace.getConfiguration(WORKSPACE).get(API_KEY);
+  const apiKey = vscode.workspace.getConfiguration(WORKSPACE).get(API_KEY, undefined);
   if (apiKey === null || !apiKey) {
     return toErrorMessage('No OpenAI API-key set!');
   }
@@ -69,7 +73,17 @@ const validateAndCreateContent = async (editor: vscode.TextEditor | undefined, h
   if (highlight.length > 1000) {
     return toErrorMessage('That\'s a long text, Clippy can\t read that much.');
   }
-  return getReviewForCode(highlight, String(apiKey))
+
+  const maxTokens = vscode.workspace.getConfiguration(WORKSPACE).get(MAX_TOKENS, 1024);
+  const model = vscode.workspace.getConfiguration(WORKSPACE).get(MODEL, 'text-davinci-003');
+  const clippyOpts = {
+    apiKey: String(apiKey),
+    model,
+    maxTokens,
+    codeToReview: highlight,
+  };
+
+  return getReviewForCode(clippyOpts)
     .then((res) => res.data.choices[0].text)
     .catch((e) => toErrorMessage(e.message));
 };
