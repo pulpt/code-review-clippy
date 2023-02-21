@@ -3,6 +3,11 @@
   "displayName": "Code review clippy",
   "description": "Clippy providers review for your horrible code.",
   "version": "0.0.1",
+  "repository": "https://github.com/pulpt/code-review-clippy",
+  "homepage": "https://github.com/pulpt/code-review-clippy",
+  "icon": "logo.png",
+  "publisher": "untero",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.75.0"
   },
