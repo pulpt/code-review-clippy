@@ -1,6 +1,6 @@
 {
   "name": "code-review-clippy",
-  "displayName": "code-review-clippy",
+  "displayName": "Code review clippy",
   "description": "Clippy providers review for your horrible code.",
   "version": "0.0.1",
   "engines": {

@@ -1,15 +1,25 @@
-# code-review-clippy README
+# Code review Clippy
+Forget lousy comments from your teammates - get professional code reviews from Clippy!
 
-This is the README for your extension "code-review-clippy". After writing up a brief description, we recommend including the following sections.
+![Clippy hates this](ex.png)
 
 ## Features
 
-TBD
-
-## Requirements
-
-TBD
+- Passive-aggressive code reviews.
 
 ## Extension Settings
 
-TBD
+- Required:
+```
+{
+    "clippyReview.openAiApiKey": "your-api-key"
+}
+```
+
+- Optional:
+```
+{
+    "clippyReview.openAiApiMaxTokens": 1024,
+    "clippyReview.openAiModel": "text-davinci-003"
+}
+```
