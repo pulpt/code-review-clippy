@@ -8,6 +8,8 @@ const API_KEY = 'openAiApiKey';
 const MODEL = 'openAiModel';
 const MAX_TOKENS = 'maxTokens';
 
+const CHAT_GPT_MODEL = 'gpt-3.5-turbo';
+
 const renderHtml = (msg: string, img: vscode.Uri) => `
   <style>
     ${style}
@@ -75,16 +77,23 @@ const validateAndCreateContent = async (editor: vscode.TextEditor | undefined, h
   }
 
   const maxTokens = vscode.workspace.getConfiguration(WORKSPACE).get(MAX_TOKENS, 1024);
-  const model = vscode.workspace.getConfiguration(WORKSPACE).get(MODEL, 'text-davinci-003');
+  const model = vscode.workspace.getConfiguration(WORKSPACE).get(MODEL, CHAT_GPT_MODEL);
+  const isModelChatGPT = model === CHAT_GPT_MODEL;
+
   const clippyOpts = {
     apiKey: String(apiKey),
     model,
     maxTokens,
     codeToReview: highlight,
+    isModelChatGPT,
   };
 
   return getReviewForCode(clippyOpts)
-    .then((res) => res.data.choices[0].text)
+    .then((res) => {
+      return isModelChatGPT
+        ? res.data.choices[0].message.content
+        : res.data.choices[0].text;
+    })
     .catch((e) => toErrorMessage(e.message));
 };
 

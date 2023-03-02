@@ -24,7 +24,7 @@ Forget lousy comments from your teammates - get professional code reviews from C
 - Optional:
 ```
 {
-    "clippyReview.openAiApiMaxTokens": 1024,
-    "clippyReview.openAiModel": "text-davinci-003"
+    "clippyReview.openAiApiMaxTokens": 1024, // default
+    "clippyReview.openAiModel": "gpt-3.5-turbo" // default
 }
 ```

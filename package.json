@@ -56,7 +56,7 @@
             "string",
             "null"
           ],
-          "default": "text-davinci-003",
+          "default": "gpt-3.5-turbo",
           "description": "OpenAI-model"
         }
       }
